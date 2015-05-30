@@ -3,6 +3,8 @@ plug-socket
 
 Simple plug.dj WebSocket EventEmitter library.
 
+[![NPM](https://nodei.co/npm/plug-socket.png?downloads)](https://nodei.co/npm/plug-socket)
+
 ## Usage
 
 ```javascript
@@ -94,6 +96,25 @@ socket.on('chat', (param, slug) => {
   log(`${slug}: receiving`, param)
 })
 ```
+
+## Building
+
+```
+npm run babel
+```
+
+## Tests
+
+Tests use `mocha`. Running tests needs a plug.dj account, so `plug-login` can
+get in, so `plug-socket` can connect. To allow the test suite to log in, sae
+your credentials in a file called `test.json` at the root of this repo:
+```json
+{ "email": "your email address"
+, "password": "your plug.dj password" }
+```
+
+Then run `npm test`. Tests depend on plug.dj being online and reachable, so you
+might get test failures if it's slow or in maintenance mode.
 
 ## License
 
