@@ -11,7 +11,8 @@
   { "ws": "^0.7.2" }
 , "devDependencies":
   { "babel": "5.x"
-  , "mocha": "2.x" }
+  , "mocha": "2.x"
+  , "plug-login": "*" }
 , "scripts":
   { "babel": "./node_modules/.bin/babel --out-dir lib src"
   , "test": "./node_modules/.bin/mocha --compilers js:babel/register" } }
