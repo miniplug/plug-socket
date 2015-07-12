@@ -9,7 +9,7 @@ Simple plug.dj WebSocket EventEmitter library.
 
 ```javascript
 const plugSocket = require('plug-socket')
-const authToken = '(...)' // get one by POST-ing to https://plug.dj/_/auth/token
+const authToken = '(...)' // get one by GET-ing https://plug.dj/_/auth/token
 
 let socket = plugSocket(authToken)
 // events will be fired on "socket" for every incoming plug.dj message
@@ -36,7 +36,7 @@ pass one to the `plugSocket()` call.
 
 You can obtain an auth token by logging in to plug.dj using something like
 [plug-login](https://github.com/goto-bus-stop/plug-login), and then sending a
-POST request to https://plug.dj/_/auth/token.
+GET request to https://plug.dj/_/auth/token.
 
 ```javascript
 const request = require('request')
@@ -44,7 +44,7 @@ const plugLogin = require('plug-login')
 const plugSocket = require('plug-socket')
 
 plugLogin(myEmail, myPassword, (e, result) => {
-  request.post(
+  request.get(
     'https://plug.dj/_/auth/token'
     // use the plug-login cookie jar for authentication
   , { json: true, jar: result.jar }
