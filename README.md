@@ -35,23 +35,26 @@ Sends an auth token. You should only call this once, and only if you did not
 pass one to the `plugSocket()` call.
 
 You can obtain an auth token by logging in to plug.dj using something like
-[plug-login](https://github.com/goto-bus-stop/plug-login), and then sending a
-GET request to https://plug.dj/_/auth/token.
+[plug-login](https://github.com/goto-bus-stop/plug-login), or by manually
+sending a GET request to https://plug.dj/_/auth/token.
 
 ```javascript
 const request = require('request')
 const plugLogin = require('plug-login')
 const plugSocket = require('plug-socket')
 
-plugLogin(myEmail, myPassword, (e, result) => {
-  request.get(
-    'https://plug.dj/_/auth/token'
-    // use the plug-login cookie jar for authentication
-  , { json: true, jar: result.jar }
-  , (e, _, body) => {
-    let authToken = body.data[0]
-    plugSocket(authToken)
-  })
+plugLogin(myEmail, myPassword, { authToken: true }, (e, result) => {
+  let sock = plugSocket(result.token)
+})
+
+// connect using only a login session cookie
+request.get(
+  'https://plug.dj/_/auth/token'
+  // use a cookie jar with a valid session cookie
+, { json: true, jar: cookieJarWithSessionCookie }
+, (e, _, body) => {
+  let authToken = body.data[0]
+  let sock = plugSocket(authToken)
 })
 ```
 
