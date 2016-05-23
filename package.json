@@ -1,18 +1,28 @@
-{ "name": "plug-socket"
-, "description": "Simple plug.dj WebSocket server interaction."
-, "version": "0.0.2"
-, "license": "MIT"
-, "keywords": [ "plug", "plug.dj", "ws", "websocket" ]
-, "main": "lib/index"
-, "repository": "goto-bus-stop/plug-socket"
-, "bugs": "https://github.com/goto-bus-stop/plug-socket/issues"
-, "author": "René Kooi <rene@kooi.me>"
-, "dependencies":
-  { "ws": "^0.7.2" }
-, "devDependencies":
-  { "babel": "5.x"
-  , "mocha": "2.x"
-  , "plug-login": "*" }
-, "scripts":
-  { "babel": "./node_modules/.bin/babel --out-dir lib src"
-  , "test": "./node_modules/.bin/mocha --compilers js:babel/register" } }
+{
+  "name": "plug-socket",
+  "description": "Simple plug.dj WebSocket server interaction.",
+  "version": "0.0.2",
+  "license": "MIT",
+  "keywords": [
+    "plug",
+    "plug.dj",
+    "ws",
+    "websocket"
+  ],
+  "main": "lib/index",
+  "repository": "goto-bus-stop/plug-socket",
+  "bugs": "https://github.com/goto-bus-stop/plug-socket/issues",
+  "author": "René Kooi <rene@kooi.me>",
+  "dependencies": {
+    "ws": "^0.7.2"
+  },
+  "devDependencies": {
+    "babel": "5.x",
+    "mocha": "2.5.1",
+    "plug-login": "*"
+  },
+  "scripts": {
+    "babel": "./node_modules/.bin/babel --out-dir lib src",
+    "test": "./node_modules/.bin/mocha --compilers js:babel/register"
+  }
+}
