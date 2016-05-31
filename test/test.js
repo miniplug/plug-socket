@@ -1,15 +1,10 @@
 import request from 'request'
 import { strictEqual as eq, ok, fail } from 'assert'
-import { statSync as exists } from 'fs'
-import { join as joinPath } from 'path'
 import { OPEN } from 'ws'
 import login from 'plug-login'
 import socket from '../src'
 
-ok(exists(joinPath(__dirname, '../test.json')))
-const args = require('../test.json')
-
-args.room = args.room || 'plug-socket-test'
+const room = 'plug-socket-test'
 
 let jar = request.jar()
 let token
@@ -28,7 +23,7 @@ describe('plug.dj', function () {
   })
 
   it('can login with valid credentials', done => {
-    login(args.email, args.password, { jar }, (e, result) => {
+    login.guest({ jar }, (e, result) => {
       if (e) throw e
       eq(result.body.status, 'ok')
       user = result.body.data[0]
@@ -78,7 +73,7 @@ describe('plug-socket', function () {
     s.on('open', () => {
       request.post(
         'https://plug.dj/_/rooms/join'
-      , { json: true, body: { slug: args.room }, jar }
+      , { json: true, body: { slug: room }, jar }
       , (e, _, body) => {
         if (e) throw e
         eq(body.status, 'ok')
