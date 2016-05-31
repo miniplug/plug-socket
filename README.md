@@ -92,13 +92,17 @@ Plug.dj events receive two arguments, `param` and `slug`. `param` is *usually*
 an object, or `undefined` for some events. The `slug` parameter contains the
 current room slug or "dashboard". When you switch rooms, sometimes you'll keep
 receiving a few events from your previous room, so the `slug` parameter allows
-you to filter those.
+you to filter those. You won't have to care for it if your app doesn't switch
+rooms much.
 
 ```javascript
 socket.on('chat', (param, slug) => {
   log(`${slug}: receiving`, param)
 })
 ```
+
+Most events are documented in more detail in the [PlugCommunity Documentation][plugcommunity docs]
+repository.
 
 ## Building
 
@@ -114,4 +118,7 @@ for a few months.
 
 ## License
 
-[MIT](./LICENSE)
+[MIT][license]
+
+[plugcommunity docs]: https://github.com/plugcommunity/documentation/tree/master/api/events/backend_events/
+[license]: ./LICENSE
