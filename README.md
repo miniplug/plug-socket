@@ -92,13 +92,17 @@ Plug.dj events receive two arguments, `param` and `slug`. `param` is *usually*
 an object, or `undefined` for some events. The `slug` parameter contains the
 current room slug or "dashboard". When you switch rooms, sometimes you'll keep
 receiving a few events from your previous room, so the `slug` parameter allows
-you to filter those.
+you to filter those. You won't have to care for it if your app doesn't switch
+rooms much.
 
 ```javascript
 socket.on('chat', (param, slug) => {
   log(`${slug}: receiving`, param)
 })
 ```
+
+Most events are documented in more detail in the [PlugCommunity Documentation][plugcommunity docs]
+repository.
 
 ## Building
 
@@ -108,17 +112,13 @@ npm run babel
 
 ## Tests
 
-Tests use `mocha`. Running tests needs a plug.dj account, so `plug-login` can
-get in, so `plug-socket` can connect. To allow the test suite to log in, sae
-your credentials in a file called `test.json` at the root of this repo:
-```json
-{ "email": "your email address"
-, "password": "your plug.dj password" }
-```
-
-Then run `npm test`. Tests depend on plug.dj being online and reachable, so you
-might get test failures if it's slow or in maintenance mode.
+Tests use `mocha`. All tests depend on plug.dj being online and reachable, so
+you might get test failures if it's slow, or in maintenance mode, or shut down
+for a few months.
 
 ## License
 
-[MIT](./LICENSE)
+[MIT][license]
+
+[plugcommunity docs]: https://github.com/plugcommunity/documentation/tree/master/api/events/backend_events/
+[license]: ./LICENSE

@@ -1,21 +1,16 @@
 import request from 'request'
 import { strictEqual as eq, ok, fail } from 'assert'
-import { statSync as exists } from 'fs'
-import { join as joinPath } from 'path'
 import { OPEN } from 'ws'
-import login from 'plug-login'
+import * as login from 'plug-login'
 import socket from '../src'
 
-ok(exists(joinPath(__dirname, '../test.json')))
-const args = require('../test.json')
-
-args.room = args.room || 'plug-socket-test'
+const room = 'plug-socket-test'
 
 let jar = request.jar()
 let token
 let user
 describe('plug.dj', function () {
-  this.timeout(5000)
+  this.timeout(30000)
 
   it('is reachable', done => {
     request('https://plug.dj/', (e, {}, body) => {
@@ -27,20 +22,19 @@ describe('plug.dj', function () {
     })
   })
 
-  it('can login with valid credentials', done => {
-    login(args.email, args.password, { jar }, (e, result) => {
-      if (e) throw e
-      eq(result.body.status, 'ok')
-      user = result.body.data[0]
+  it('can connect as guest', done => {
+    login.guest({ jar }, (e, result) => {
+      if (e) return done(e)
+      ok(result)
       done()
     })
   })
 
   it('gives a valid auth token', done => {
-    request('https://plug.dj/_/auth/token', { json: true, jar }, (e, _, body) => {
-      if (e) throw e
-      ok(body.data[0])
-      token = body.data[0]
+    login.getAuthToken({ jar }, (e, authToken) => {
+      if (e) return done(e)
+      ok(authToken)
+      token = authToken
       done()
     })
   })
@@ -48,6 +42,7 @@ describe('plug.dj', function () {
 })
 
 describe('plug-socket', function () {
+  this.timeout(30000)
 
   it('can connect and authenticate with an auth token', done => {
     socket(token).once('ack', param => {
@@ -57,8 +52,6 @@ describe('plug-socket', function () {
   })
 
   it('can connect without an initial auth token', function (done) {
-    this.timeout(3000)
-
     let s = socket()
     s.on('ack', fail)
     setTimeout(() => {
@@ -72,25 +65,27 @@ describe('plug-socket', function () {
   })
 
   it('emits events for chat', function (done) {
-    this.timeout(5000)
+    const user = { id: 342546, username: 'test' }
     const testMsg = 'This is plug-socket speaking!'
-    let s = socket(token)
-    s.on('open', () => {
-      request.post(
-        'https://plug.dj/_/rooms/join'
-      , { json: true, body: { slug: args.room }, jar }
-      , (e, _, body) => {
-        if (e) throw e
-        eq(body.status, 'ok')
-
-        s.chat(testMsg).on('chat', msg => {
-          if (msg.uid === user.id) {
-            eq(msg.message, testMsg)
-            done()
-          }
-        })
-      })
+    let s = socket()
+    s.on('chat', msg => {
+      if (msg.uid === user.id) {
+        eq(msg.message, testMsg)
+        done()
+      }
     })
+    s.emit('message', JSON.stringify([
+      {
+        a: 'chat',
+        p: {
+          cid: `${user.id}-${Date.now()}`,
+          message: testMsg,
+          sub: 0,
+          uid: user.id,
+          un: user.username
+        },
+        s: room
+      }
+    ]))
   })
-
 })
