@@ -15,7 +15,7 @@
   , "babel-plugin-add-module-exports": "^0.2.1"
   , "babel-register": "^6.5.0"
   , "mocha": "2.x"
-  , "plug-login": "*" }
+  , "plug-login": "^0.4.0" }
 , "scripts":
   { "babel": "./node_modules/.bin/babel --out-dir lib src"
   , "test": "./node_modules/.bin/mocha --compilers js:babel-register" } }
