@@ -2,7 +2,7 @@ var request = require('request')
 var assert = require('assert')
 var WebSocket = require('ws')
 var login = require('plug-login')
-var socket = require('../')
+var socket = require('./')
 
 var room = 'plug-socket-test'
 
