@@ -38,7 +38,6 @@ describe('plug.dj', function () {
       done()
     })
   })
-
 })
 
 describe('plug-socket', function () {
@@ -78,7 +77,7 @@ describe('plug-socket', function () {
       {
         a: 'chat',
         p: {
-          cid: `${user.id}-${Date.now()}`,
+          cid: user.id + '-' + Date.now(),
           message: testMsg,
           sub: 0,
           uid: user.id,
