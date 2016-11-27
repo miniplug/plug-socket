@@ -1,19 +1,19 @@
-import request from 'request'
-import { strictEqual as eq, ok, fail } from 'assert'
-import { OPEN } from 'ws'
-import * as login from 'plug-login'
-import socket from '../src'
+var request = require('request')
+var assert = require('assert')
+var WebSocket = require('ws')
+var login = require('plug-login')
+var socket = require('../')
 
-const room = 'plug-socket-test'
+var room = 'plug-socket-test'
 
-let jar = request.jar()
-let token
-let user
+var jar = request.jar()
+var token
+var user
 describe('plug.dj', function () {
   this.timeout(30000)
 
-  it('is reachable', done => {
-    request('https://plug.dj/', (e, {}, body) => {
+  it('is reachable', function (done) {
+    request('https://plug.dj/', function (e, _, body) {
       if (e)
         throw e
       if (body.indexOf('<title>maintenance') !== -1)
@@ -22,18 +22,18 @@ describe('plug.dj', function () {
     })
   })
 
-  it('can connect as guest', done => {
-    login.guest({ jar }, (e, result) => {
+  it('can connect as guest', function (done) {
+    login.guest({ jar: jar }, function (e, result) {
       if (e) return done(e)
-      ok(result)
+      assert.ok(result)
       done()
     })
   })
 
-  it('gives a valid auth token', done => {
-    login.getAuthToken({ jar }, (e, authToken) => {
+  it('gives a valid auth token', function (done) {
+    login.getAuthToken({ jar: jar }, function (e, authToken) {
       if (e) return done(e)
-      ok(authToken)
+      assert.ok(authToken)
       token = authToken
       done()
     })
@@ -44,33 +44,33 @@ describe('plug.dj', function () {
 describe('plug-socket', function () {
   this.timeout(30000)
 
-  it('can connect and authenticate with an auth token', done => {
-    socket(token).once('ack', param => {
-      eq(param, '1')
+  it('can connect and authenticate with an auth token', function (done) {
+    socket(token).once('ack', function (param) {
+      assert.strictEqual(param, '1')
       done()
     })
   })
 
   it('can connect without an initial auth token', function (done) {
-    let s = socket()
-    s.on('ack', fail)
-    setTimeout(() => {
-      s.removeListener('ack', fail)
+    var s = socket()
+    s.on('ack', assert.fail)
+    setTimeout(function () {
+      s.removeListener('ack', assert.fail)
 
-      s.on('ack', param => {
-        eq(param, '1')
+      s.on('ack', function (param) {
+        assert.strictEqual(param, '1')
         done()
       }).auth(token)
     }, 1000)
   })
 
   it('emits events for chat', function (done) {
-    const user = { id: 342546, username: 'test' }
-    const testMsg = 'This is plug-socket speaking!'
-    let s = socket()
-    s.on('chat', msg => {
+    var user = { id: 342546, username: 'test' }
+    var testMsg = 'This is plug-socket speaking!'
+    var s = socket()
+    s.on('chat', function (msg) {
       if (msg.uid === user.id) {
-        eq(msg.message, testMsg)
+        assert.strictEqual(msg.message, testMsg)
         done()
       }
     })
