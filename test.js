@@ -60,8 +60,8 @@ describe('plug-socket', function () {
         done()
       }
     })
-    s.emit('message', JSON.stringify([
-      {
+    s.onmessage({
+      data: JSON.stringify([ {
         a: 'chat',
         p: {
           cid: user.id + '-' + Date.now(),
@@ -71,7 +71,7 @@ describe('plug-socket', function () {
           un: user.username
         },
         s: room
-      }
-    ]))
+      } ])
+    })
   })
 })

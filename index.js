@@ -13,12 +13,12 @@ module.exports = function socket (authToken) {
 
   var queue = []
 
-  function onmessage (msg) {
-    if (msg === 'h') {
+  function onmessage (event) {
+    if (event.data === 'h') {
       return null
     }
 
-    var actions = JSON.parse(msg)
+    var actions = JSON.parse(event.data)
     if (!Array.isArray(actions)) {
       return null
     }
