@@ -1,9 +1,15 @@
-var WebSocket = require('ws')
+var WS = require('ws') // Will be empty object in browserified builds.
+var WS_URL = 'wss://godj.plug.dj:443/socket'
+
+var WSSTATE_OPEN = 1
 
 module.exports = function socket (authToken) {
-  var ws = new WebSocket('wss://godj.plug.dj:443/socket', {
-    origin: 'https://plug.dj'
-  })
+  var ws
+  if (typeof WS === 'function') {
+    ws = new WS(WS_URL, { origin: 'https://plug.dj' })
+  } else {
+    ws = new WebSocket(WS_URL)
+  }
 
   var queue = []
 
@@ -25,7 +31,7 @@ module.exports = function socket (authToken) {
   }
 
   ws.sendMessage = function sendMessage (action, param) {
-    if (ws.readyState === WebSocket.OPEN) {
+    if (ws.readyState === WSSTATE_OPEN) {
       ws.send(JSON.stringify({
         a: action,
         p: param,
@@ -53,8 +59,8 @@ module.exports = function socket (authToken) {
     return ws.sendMessage('chat', param)
   }
 
-  ws.on('message', onmessage)
-  ws.on('open', onopen)
+  ws.onmessage = onmessage
+  ws.onopen = onopen
 
   if (authToken) {
     ws.auth(authToken)
