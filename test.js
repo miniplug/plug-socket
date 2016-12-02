@@ -1,4 +1,4 @@
-var request = require('request')
+var got = require('got')
 var assert = require('assert')
 var WebSocket = require('ws')
 var login = require('plug-login')
@@ -6,36 +6,23 @@ var socket = require('./')
 
 var room = 'plug-socket-test'
 
-var jar = request.jar()
 var token
 var user
 describe('plug.dj', function () {
   this.timeout(30000)
 
-  it('is reachable', function (done) {
-    request('https://plug.dj/', function (e, _, body) {
-      if (e)
-        throw e
-      if (body.indexOf('<title>maintenance') !== -1)
+  it('is reachable', function () {
+    return got('https://plug.dj/').then(function (response) {
+      if (response.body.indexOf('<title>maintenance') !== -1)
         throw new Error('plug.dj is currently in maintenance mode.')
-      done()
     })
   })
 
-  it('can connect as guest', function (done) {
-    login.guest({ jar: jar }, function (e, result) {
-      if (e) return done(e)
+  it('can connect as guest and gets a valid auth token', function () {
+    return login.guest({ authToken: true }).then(function (result) {
       assert.ok(result)
-      done()
-    })
-  })
-
-  it('gives a valid auth token', function (done) {
-    login.getAuthToken({ jar: jar }, function (e, authToken) {
-      if (e) return done(e)
-      assert.ok(authToken)
-      token = authToken
-      done()
+      assert.ok(result.token)
+      token = result.token
     })
   })
 })
