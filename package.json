@@ -13,9 +13,10 @@
   "bugs": "https://github.com/goto-bus-stop/plug-socket/issues",
   "author": "René Kooi <rene@kooi.me>",
   "browser": {
-    "ws": false
+    "ws": "./ws"
   },
   "dependencies": {
+    "component-emitter": "^1.2.1",
     "ws": "^1.0.1"
   },
   "devDependencies": {
