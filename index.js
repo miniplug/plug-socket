@@ -1,15 +1,10 @@
-var WS = require('ws') // Will be empty object in browserified builds.
+var WebSocket = require('ws')
 var WS_URL = 'wss://godj.plug.dj:443/socket'
 
 var WSSTATE_OPEN = 1
 
 module.exports = function socket (authToken) {
-  var ws
-  if (typeof WS === 'function') {
-    ws = new WS(WS_URL, { origin: 'https://plug.dj' })
-  } else {
-    ws = new WebSocket(WS_URL)
-  }
+  var ws = new WebSocket(WS_URL, { origin: 'https://plug.dj' })
 
   var queue = []
 
