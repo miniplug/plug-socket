@@ -113,12 +113,6 @@ socket.on('action', (type, param, slug) => {
 Most events are documented in more detail in the [PlugCommunity Documentation][plugcommunity docs]
 repository.
 
-## Building
-
-```
-npm run babel
-```
-
 ## Tests
 
 Tests use `mocha`. All tests depend on plug.dj being online and reachable, so
