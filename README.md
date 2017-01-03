@@ -101,6 +101,15 @@ socket.on('chat', (param, slug) => {
 })
 ```
 
+You can also handle _every_ plug.dj event by adding an "action" listener:
+
+```javascript
+socket.on('action', (type, param, slug) => {
+  // `type` is one of the events listed above.
+  log(`${slug}: receiving a "${type}" event with`, param)
+})
+```
+
 Most events are documented in more detail in the [PlugCommunity Documentation][plugcommunity docs]
 repository.
 

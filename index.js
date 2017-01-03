@@ -27,6 +27,7 @@ module.exports = function socket (authToken) {
       // Action shape:
       // { a: action, p: param, s: slug }
       ws.emit(data.a, data.p, data.s)
+      ws.emit('action', data.a, data.p, data.s)
     })
   }
 

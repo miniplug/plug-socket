@@ -74,4 +74,36 @@ describe('plug-socket', function () {
       } ])
     })
   })
+
+  it('emits "action" events for each individual message', function () {
+    var s = socket()
+
+    var calledEarn = false
+    var calledGift = false
+    var called = {}
+
+    s.on('earn', function () {
+      calledEarn = true
+    })
+    s.on('gift', function () {
+      calledGift = true
+    })
+    s.on('action', function (action, param, slug) {
+      called[action] = true
+      assert.ok(param)
+      assert.ok(slug)
+    })
+
+    s.onmessage({
+      data: JSON.stringify([
+        { a: 'earn', p: { xp: 1000 }, s: 'dashboard' },
+        { a: 'gift', p: { uid: -1 }, s: 'tastycat' }
+      ])
+    })
+
+    assert.ok(calledEarn)
+    assert.ok(calledGift)
+    assert.ok(called.earn)
+    assert.ok(called.gift)
+  })
 })
