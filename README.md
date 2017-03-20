@@ -39,22 +39,23 @@ You can obtain an auth token by logging in to plug.dj using something like
 sending a GET request to https://plug.dj/_/auth/token.
 
 ```javascript
-const request = require('request')
-const plugLogin = require('plug-login')
 const plugSocket = require('plug-socket')
 
-plugLogin(myEmail, myPassword, { authToken: true }, (e, result) => {
-  let sock = plugSocket(result.token)
+// Using `plug-login`'s authToken option:
+const plugLogin = require('plug-login')
+plugLogin(myEmail, myPassword, { authToken: true }).then((result) => {
+  const sock = plugSocket(result.token)
 })
 
-// connect using only a login session cookie
-request.get(
-  'https://plug.dj/_/auth/token'
-  // use a cookie jar with a valid session cookie
-, { json: true, jar: cookieJarWithSessionCookie }
-, (e, _, body) => {
-  let authToken = body.data[0]
-  let sock = plugSocket(authToken)
+// Or manually, with a cookie stored in `mySessionCookie`:
+const got = require('got')
+got('https://plug.dj/_/auth/token', {
+  json: true,
+  // Make
+  headers: { cookie: mySessionCookie }
+}).then((response) => {
+  const authToken = response.body.data[0]
+  const sock = plugSocket(authToken)
 })
 ```
 
@@ -64,11 +65,16 @@ Sends a chat message to the current room. Make sure to join a room first by
 sending a POST request to https://plug.dj/_/rooms/join:
 
 ```javascript
-request.post(
-  'https://plug.dj/_/rooms/join'
-, { json: true, jar: plugLoginJar
-  , body: { slug: 'my-room-slug' } }
-, (e, _, body) => { /* joined! */ })
+got.post('https://plug.dj/_/rooms/join', {
+  json: true,
+  headers: {
+    cookie: mySessionCookie,
+    'content-type': 'application/json'
+  },
+  body: JSON.stringify({
+    slug: 'my-room-slug'
+  })
+}).then((response) => { /* joined! */ })
 ```
 
 ### Events
