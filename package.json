@@ -21,7 +21,7 @@
   },
   "devDependencies": {
     "got": "^6.6.3",
-    "mocha": "3.4.1",
+    "mocha": "3.4.2",
     "plug-login": "^1.0.0"
   },
   "scripts": {
