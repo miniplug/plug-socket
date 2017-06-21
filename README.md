@@ -1,6 +1,8 @@
 plug-socket
 ===========
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/goto-bus-stop/plug-socket.svg)](https://greenkeeper.io/)
+
 Simple plug.dj WebSocket EventEmitter library.
 
 [![NPM](https://nodei.co/npm/plug-socket.png?downloads)](https://nodei.co/npm/plug-socket)
