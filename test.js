@@ -1,5 +1,6 @@
 var got = require('got')
 var assert = require('assert')
+var http = require('http')
 var WebSocket = require('ws')
 var login = require('plug-login')
 var socket = require('./')
@@ -105,5 +106,23 @@ describe('plug-socket', function () {
     assert.ok(calledGift)
     assert.ok(called.earn)
     assert.ok(called.gift)
+  })
+
+  it('disconnects if a message has not been received for some time', function (done) {
+    this.timeout(2000)
+
+    var server = http.createServer().listen()
+    var wsserver = new WebSocket.Server({ server: server })
+    var s = socket(null, {
+      timeout: 300,
+      url: 'ws://localhost:' + server.address().port
+    })
+
+    s.onclose = function (event) {
+      assert.equal(event.code, 3001)
+
+      server.close()
+      done()
+    }
   })
 })

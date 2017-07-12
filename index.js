@@ -2,13 +2,25 @@ var WebSocket = require('ws')
 var WS_URL = 'wss://godj.plug.dj:443/socket'
 
 var WSSTATE_OPEN = 1
+var HEARTBEAT_TIMEOUT = 25 * 1000
 
-module.exports = function socket (authToken) {
-  var ws = new WebSocket(WS_URL, { origin: 'https://plug.dj' })
+module.exports = function socket (authToken, options) {
+  var wsUrl = options && options.url || WS_URL
+  var heartbeatTimeout = options && options.timeout || HEARTBEAT_TIMEOUT
+
+  var ws = new WebSocket(wsUrl, { origin: 'https://plug.dj' })
 
   var queue = []
+  var heartbeat
+
+  function gotHeartbeat () {
+    if (heartbeat) clearTimeout(heartbeat)
+    heartbeat = setTimeout(ontimedout, heartbeatTimeout)
+  }
 
   function onmessage (event) {
+    gotHeartbeat()
+
     if (event.data === 'h') {
       return null
     }
@@ -43,9 +55,18 @@ module.exports = function socket (authToken) {
    * Send all queued messages.
    */
   function onopen () {
+    gotHeartbeat()
     queue.forEach(function (message) {
       ws.sendMessage(message.action, message.param)
     })
+  }
+
+  /**
+   * When we haven't received a heartbeat for some time, the connection might
+   * have stopped working.
+   */
+  function ontimedout () {
+    ws.close(3001, 'Timed out: did not receive heartbeat from plug.dj')
   }
 
   ws.auth = function auth (param) {
