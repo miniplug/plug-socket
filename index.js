@@ -61,6 +61,10 @@ module.exports = function socket (authToken, options) {
     })
   }
 
+  function onclose () {
+    if (heartbeat) clearTimeout(heartbeat)
+  }
+
   /**
    * When we haven't received a heartbeat for some time, the connection might
    * have stopped working.
@@ -78,6 +82,7 @@ module.exports = function socket (authToken, options) {
 
   ws.onmessage = onmessage
   ws.onopen = onopen
+  ws.onclose = onclose
 
   if (authToken) {
     ws.auth(authToken)
