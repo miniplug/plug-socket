@@ -1,14 +1,16 @@
 var WebSocket = require('ws')
 var WS_URL = 'wss://godj.plug.dj:443/socket'
+var WS_ORIGIN = 'https://plug.dj'
 
 var WSSTATE_OPEN = 1
 var HEARTBEAT_TIMEOUT = 25 * 1000
 
 module.exports = function socket (authToken, options) {
   var wsUrl = options && options.url || WS_URL
+  var wsOrigin = options && options.origin || WS_ORIGIN
   var heartbeatTimeout = options && options.timeout || HEARTBEAT_TIMEOUT
 
-  var ws = new WebSocket(wsUrl, { origin: 'https://plug.dj' })
+  var ws = new WebSocket(wsUrl, { origin: wsOrigin })
 
   var queue = []
   var heartbeat
