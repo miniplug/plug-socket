@@ -30,16 +30,22 @@ describe('plug.dj', function () {
 
 describe('plug-socket', function () {
   this.timeout(30000)
+  var s
+
+  afterEach(function () {
+    if (s) s.close()
+  })
 
   it('can connect and authenticate with an auth token', function (done) {
-    socket(token).once('ack', function (param) {
+    s = socket(token)
+    s.once('ack', function (param) {
       assert.strictEqual(param, '1')
       done()
     })
   })
 
   it('can connect without an initial auth token', function (done) {
-    var s = socket()
+    s = socket()
     s.on('ack', assert.fail)
     setTimeout(function () {
       s.removeListener('ack', assert.fail)
@@ -54,30 +60,32 @@ describe('plug-socket', function () {
   it('emits events for chat', function (done) {
     var user = { id: 342546, username: 'test' }
     var testMsg = 'This is plug-socket speaking!'
-    var s = socket()
+    s = socket()
     s.on('chat', function (msg) {
       if (msg.uid === user.id) {
         assert.strictEqual(msg.message, testMsg)
         done()
       }
     })
-    s.onmessage({
-      data: JSON.stringify([ {
-        a: 'chat',
-        p: {
-          cid: user.id + '-' + Date.now(),
-          message: testMsg,
-          sub: 0,
-          uid: user.id,
-          un: user.username
-        },
-        s: room
-      } ])
+    s.once('open', function () {
+      s.onmessage({
+        data: JSON.stringify([ {
+          a: 'chat',
+          p: {
+            cid: user.id + '-' + Date.now(),
+            message: testMsg,
+            sub: 0,
+            uid: user.id,
+            un: user.username
+          },
+          s: room
+        } ])
+      })
     })
   })
 
-  it('emits "action" events for each individual message', function () {
-    var s = socket()
+  it('emits "action" events for each individual message', function (done) {
+    s = socket()
 
     var calledEarn = false
     var calledGift = false
@@ -95,17 +103,21 @@ describe('plug-socket', function () {
       assert.ok(slug)
     })
 
-    s.onmessage({
-      data: JSON.stringify([
-        { a: 'earn', p: { xp: 1000 }, s: 'dashboard' },
-        { a: 'gift', p: { uid: -1 }, s: 'tastycat' }
-      ])
-    })
+    s.once('open', function () {
+      s.onmessage({
+        data: JSON.stringify([
+          { a: 'earn', p: { xp: 1000 }, s: 'dashboard' },
+          { a: 'gift', p: { uid: -1 }, s: 'tastycat' }
+        ])
+      })
 
-    assert.ok(calledEarn)
-    assert.ok(calledGift)
-    assert.ok(called.earn)
-    assert.ok(called.gift)
+      assert.ok(calledEarn)
+      assert.ok(calledGift)
+      assert.ok(called.earn)
+      assert.ok(called.gift)
+
+      done()
+    })
   })
 
   it('disconnects if a message has not been received for some time', function (done) {
@@ -113,7 +125,7 @@ describe('plug-socket', function () {
 
     var server = http.createServer().listen()
     var wsserver = new WebSocket.Server({ server: server })
-    var s = socket(null, {
+    s = socket(null, {
       timeout: 300,
       url: 'ws://localhost:' + server.address().port
     })
