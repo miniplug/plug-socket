@@ -11,7 +11,7 @@
   ],
   "repository": "goto-bus-stop/plug-socket",
   "bugs": "https://github.com/goto-bus-stop/plug-socket/issues",
-  "author": "René Kooi <rene@kooi.me>",
+  "author": "Renée Kooi <renee@kooi.me>",
   "dependencies": {
     "ws": "^5.0.0"
   },
