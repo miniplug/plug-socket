@@ -32,6 +32,10 @@ describe('plug-socket', function () {
   this.timeout(30000)
   var s
 
+  beforeEach(function () {
+    assert.ok(token, 'has an auth token')
+  })
+
   afterEach(function () {
     if (s) s.close()
   })
