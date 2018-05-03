@@ -1,7 +1,7 @@
 {
   "name": "plug-socket",
   "description": "Simple plug.dj WebSocket server interaction.",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "license": "MIT",
   "keywords": [
     "plug",
