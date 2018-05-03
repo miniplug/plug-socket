@@ -1,3 +1,6 @@
-/lib
+/index.js
+/index.mjs
+/index.js.map
+/index.mjs.map
 /node_modules
 /test.json

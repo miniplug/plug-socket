@@ -1,19 +1,20 @@
-var WebSocket = require('ws')
-var WS_URL = 'wss://ws-prod.plug.dj:443/socket'
-var WS_ORIGIN = 'https://plug.dj'
+import WebSocket from 'ws'
 
-var WSSTATE_OPEN = 1
-var HEARTBEAT_TIMEOUT = 25 * 1000
+const WS_URL = 'wss://ws-prod.plug.dj:443/socket'
+const WS_ORIGIN = 'https://plug.dj'
 
-module.exports = function socket (authToken, options) {
-  var wsUrl = options && options.url || WS_URL
-  var wsOrigin = options && options.origin || WS_ORIGIN
-  var heartbeatTimeout = options && options.timeout || HEARTBEAT_TIMEOUT
+const WSSTATE_OPEN = 1
+const HEARTBEAT_TIMEOUT = 25 * 1000
 
-  var ws = new WebSocket(wsUrl, { origin: wsOrigin })
+export default function socket (authToken, options) {
+  const wsUrl = options && options.url || WS_URL
+  const wsOrigin = options && options.origin || WS_ORIGIN
+  const heartbeatTimeout = options && options.timeout || HEARTBEAT_TIMEOUT
 
-  var queue = []
-  var heartbeat
+  const ws = new WebSocket(wsUrl, { origin: wsOrigin })
+
+  const queue = []
+  let heartbeat
 
   function gotHeartbeat () {
     if (heartbeat) clearTimeout(heartbeat)
@@ -27,12 +28,12 @@ module.exports = function socket (authToken, options) {
       return null
     }
 
-    var actions = JSON.parse(event.data)
+    const actions = JSON.parse(event.data)
     if (!Array.isArray(actions)) {
       return null
     }
 
-    actions.forEach(function (data) {
+    actions.forEach((data) => {
       // Action shape:
       // { a: action, p: param, s: slug }
       ws.emit(data.a, data.p, data.s)
@@ -58,7 +59,7 @@ module.exports = function socket (authToken, options) {
    */
   function onopen () {
     gotHeartbeat()
-    queue.forEach(function (message) {
+    queue.forEach((message) => {
       ws.sendMessage(message.action, message.param)
     })
   }
