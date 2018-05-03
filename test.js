@@ -1,4 +1,4 @@
-var got = require('got')
+var fetch = require('node-fetch')
 var assert = require('assert')
 var http = require('http')
 var WebSocket = require('ws')
@@ -13,8 +13,10 @@ describe('plug.dj', function () {
   this.timeout(30000)
 
   it('is reachable', function () {
-    return got('https://plug.dj/').then(function (response) {
-      if (response.body.indexOf('<title>maintenance') !== -1)
+    return fetch('https://plug.dj/').then(function (response) {
+      return response.text()
+    }).then(function (body) {
+      if (body.indexOf('<title>maintenance') !== -1)
         throw new Error('plug.dj is currently in maintenance mode.')
     })
   })
