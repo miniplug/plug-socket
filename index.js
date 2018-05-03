@@ -1,5 +1,5 @@
 var WebSocket = require('ws')
-var WS_URL = 'wss://godj.plug.dj:443/socket'
+var WS_URL = 'wss://ws-prod.plug.dj:443/socket'
 var WS_ORIGIN = 'https://plug.dj'
 
 var WSSTATE_OPEN = 1
