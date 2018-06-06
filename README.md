@@ -3,7 +3,7 @@ plug-socket
 
 Simple plug.dj WebSocket EventEmitter library.
 
-[![NPM](https://nodei.co/npm/plug-socket.png?downloads)](https://nodei.co/npm/plug-socket)
+[![NPM](https://nodei.co/npm/plug-socket.png?downloads)](https://nodei.co/npm/plug-socket) [![Greenkeeper badge](https://badges.greenkeeper.io/miniplug/plug-socket.svg)](https://greenkeeper.io/)
 
 ## Usage
 
