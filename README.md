@@ -35,7 +35,7 @@ Sends an auth token. You should only call this once, and only if you did not
 pass one to the `plugSocket()` call.
 
 You can obtain an auth token by logging in to plug.dj using something like
-[plug-login](https://github.com/goto-bus-stop/plug-login), or by manually
+[plug-login](https://github.com/miniplug/plug-login), or by manually
 sending a GET request to https://plug.dj/_/auth/token.
 
 ```javascript
