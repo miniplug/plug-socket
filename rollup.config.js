@@ -6,7 +6,7 @@ const pkg = require('./package.json')
 export default {
   input: 'src/index.js',
   output: [
-    { format: 'cjs', file: pkg.main, sourcemap: true },
+    { format: 'cjs', file: pkg.main, sourcemap: true, interop: false },
     { format: 'es', file: pkg.module, sourcemap: true }
   ],
   external: builtins.concat(Object.keys(pkg.dependencies)),
