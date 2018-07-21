@@ -5,7 +5,7 @@
   "author": "Renée Kooi <renee@kooi.me>",
   "bugs": "https://github.com/miniplug/plug-socket/issues",
   "dependencies": {
-    "ws": "^5.2.0"
+    "ws": "^6.0.0"
   },
   "devDependencies": {
     "builtin-modules": "^3.0.0",
